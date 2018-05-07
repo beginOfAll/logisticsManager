@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运单详情</title>
+    {% load staticfiles %}
+    <script src="{% static 'waybill/js/jquery-2.2.3.min.js' %}"></script>
+    <script src="{% static 'waybill/js/vue.min.js' %}"></script>
+    <script src="{% static 'waybill/js/bootstrap.js' %}"></script>
+    <script src="{% static 'waybill/js/bootbox.js' %}"></script>
+    <script src="{% static 'waybill/js/django_csrf.js' %}"></script>
+    <script src="{% static 'waybill/js/wjzJS.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'waybill/css/bootstrap.css' %}"/>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span style="font-size: xx-large">运单详情</span>
+            <span style="font-size: x-large">当前用户:{{ username }}</span>
+        </div>
+        <div class="panel-body">
+            {% if waybill %}
+                <table class="table table-hover table-condensed" width="100%">
+                    <thead>
+                        <tr><th width="40%">项目</th><th width="60%">内容</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td> 运单号</td><td>{{ waybill.waybill_number }}</td></tr>
+                        <tr><td> 创建时间</td><td>{{ waybill.create_time|date:'Y-m-d H:i:s'}}</td></tr>
+                        <tr><td> 订单号</td><td>{{ waybill.order_number }}</td></tr>
+                        <tr><td> 仓库</td><td>{{ waybill.store }}</td></tr>
+                        <tr><td> 客户渠道</td><td>{{ waybill.client_channel }}</td></tr>
+
+                        <tr class="info"><td> 发件人姓名</td><td>{{ waybill.from_person_name }}</td></tr>
+                        <tr class="info"><td> 发件人公司</td><td>{{ waybill.from_company }}</td></tr>
+                        <tr class="info"><td> 发件人手机号码</td><td>{{ waybill.from_phone_num }}</td></tr>
+                        <tr class="info"><td> 发件人国家</td><td>{{ waybill.from_country }}</td></tr>
+                        <tr class="info"><td> 省、州</td><td>{{ waybill.from_province }}</td></tr>
+                        <tr class="info"><td> 城市</td><td>{{ waybill.from_city }}</td></tr>
+                        <tr class="info"><td> 街道</td><td>{{ waybill.from_street }}</td></tr>
+
+                        <tr class="success"><td> 收件人姓名</td><td>{{ waybill.to_person_name }}</td></tr>
+                        <tr class="success"><td> 收件人公司</td><td>{{ waybill.to_company }}</td></tr>
+                        <tr class="success"><td> 收件人手机号码</td><td>{{ waybill.to_phone_num }}</td></tr>
+                        <tr class="success"><td> 收件人国家</td><td>{{ waybill.to_country }}</td></tr>
+                        <tr class="success"><td> 省、州</td><td>{{ waybill.to_province }}</td></tr>
+                        <tr class="success"><td> 城市</td><td>{{ waybill.to_city }}</td></tr>
+                        <tr class="success"><td> 街道</td><td>{{ waybill.to_street }}</td></tr>
+
+                        <tr><td> 物品描述</td><td>{{ waybill.goods_detail }}</td></tr>
+                        <tr><td> 物品数量</td><td>{{ waybill.goods_numbers }}</td></tr>
+                        <tr><td> 单价</td><td>{{ waybill.single_price }} {{ waybill.currency }}</td></tr>
+                        <tr><td> 总价</td><td>{{ waybill.total_price }} {{ waybill.currency }}</td></tr>
+                        <tr><td> 包裹数量</td><td>{{ waybill.package_numbers }}</td></tr>
+                        <tr><td> 总重量</td><td>{{ waybill.weight }}</td></tr>
+
+                        <tr  class="warning"><td> 备注</td><td>{{ waybill.remark }}</td></tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+            <button onclick="window.close()" class="btn btn-danger">关闭</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

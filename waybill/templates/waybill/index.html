@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    {% load staticfiles %}
+    <script src="{% static 'waybill/js/jquery-2.2.3.min.js' %}"></script>
+    <script src="{% static 'waybill/js/vue.min.js' %}"></script>
+    <script src="{% static 'waybill/js/bootstrap.js' %}"></script>
+    <script src="{% static 'waybill/js/bootbox.js' %}"></script>
+    <script src="{% static 'waybill/js/django_csrf.js' %}"></script>
+    <script src="{% static 'waybill/js/wjzJS.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'waybill/css/bootstrap.css' %}"/>
+</head>
+<body>
+<div class="col-sm-offset-1 col-sm-10">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">运单管理系统Demo</a>
+            </div>
+            <div>
+                <ul id="myTab" class="nav navbar-nav">
+                    <li class="active"><a href="#home" data-toggle="tab">主页</a></li>
+                    <li class="dropdown">
+                        <a href="#" id="myTabDrop1" class="dropdown-toggle" data-toggle="dropdown">物流中心<b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                            <li><a href="#logistics" tabindex="-1" data-toggle="tab">物流追踪</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" id="myTabDrop2" class="dropdown-toggle" data-toggle="dropdown">运单中心<b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop2">
+                            <li><a href="#my_waybill" tabindex="-1" data-toggle="tab">我的运单</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'createWaybill' %}" target="waybill" tabindex="-1">创建运单</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#import_waybill" tabindex="-1" data-toggle="tab">导入运单</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" id="myTabDrop3" class="dropdown-toggle" data-toggle="dropdown">财务中心<b
+                                class="caret"></b></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop3">
+                            <li><a href="#recharge_online" tabindex="-1" data-toggle="tab">在线充值</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#payment_history" tabindex="-1" data-toggle="tab">付款记录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'customer' %}" target="customer"><span class="glyphicon glyphicon-user"></span>
+                        {{ username|default:"未登录" }}
+                    </a></li>
+                    <li><a href="{% url 'userLogout' %}"><span class="glyphicon glyphicon-log-out"></span> 注销</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="home">home</div>
+        <div class="tab-pane fade" id="logistics">logistics</div>
+        <div class="tab-pane fade" id="my_waybill">
+            <div class="panel panel-primary">
+                <div class="panel-heading">我的历史运单</div>
+                <table class="table">
+                    <tr><th>#</th><th>运单号</th><th>时间</th><th>收件人</th><th>查看详细</th></tr>
+                    <tr v-for="(item, index) in waybill_list">
+                        <td><span v-text="index+1"></span></td>
+                        <td><span v-text="item['waybill_number']"></span></td>
+                        <td><span v-text="item['create_time']"></span></td>
+                        <td><span v-text="item['to_person_name']"></span></td>
+                        <td><button class="btn btn-default" @click="waybill_detail(item['waybill_number'])">详细</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="import_waybill">import_waybill</div>
+        <div class="tab-pane fade" id="recharge_online">recharge_online</div>
+        <div class="tab-pane fade" id="payment_history">payment_history</div>
+    </div>
+</div>
+<script>
+	/*var initData = {
+		getCustomerInfo:false,
+		customerInfo:null
+	};
+	
+	jz.load('/getCustomer',function(res){
+		if(res){
+			initData['getCustomerInfo'] = true;
+			initData['customerInfo'] = res;
+		}else {
+		    initData['getCustomerInfo'] = false;
+        }
+	});*/
+	var my_waybill = new Vue({
+		el:'#my_waybill',
+		data:{
+			waybill_list:[]
+		},
+		mounted:function(){
+ 			this.$nextTick(function(){
+ 				jz.load("{% url 'waybillList' %}",function(res){
+ 					if(res){
+ 						my_waybill.waybill_list=res;
+ 					}
+ 				})
+			})
+		},
+		methods:{
+			waybill_detail:function(wbNumber){
+				window.open('/waybillDetailed/?wbNumber='+ wbNumber,'detailed')
+			}
+		}
+	});
+	
+</script>
+</body>
+</html>
